@@ -34,14 +34,19 @@ def intro():
         if event.type == pygame.QUIT:
             exit()
     enemies = [0,4,8,12,16,40]
-    enemies = enemies[level]
+    try:
+        enemies = enemies[level]
+    except:
+        end = pressstart.render("YOU WIN",True,(255,255,255))
+        screen.blit(end,(125,250))
+        return False
     spacing = 500 / 4
     if (enemies % 4 != 0):
         spacing = 500 / 3
     spacing += 16 # sprite offset
-    for i in range(enemies):
+    for i in range(0,enemies):
         cnt = i
-        if cnt == 0:
+        if cnt % 4 == 0:
             cnt += 1
         row_offset = ( (cnt-1)//4 ) * 30
         screen.blit(enemy_img,(spacing * (i % 4) * load_width, 100+row_offset))
@@ -49,10 +54,10 @@ def intro():
     if load_width > 1:
         for i in range(enemies):
             cnt = i
-            if cnt == 0:
+            if cnt % 4 == 0:
                 cnt += 1
             row_offset = ( (cnt-1)//4 ) * 30
-            for i in  range(level): # multilives
+            for _ in  range(level): # multilives
                 pos_enemy.append((int(spacing * (i % 4) * load_width),int(100+row_offset)))
         return True
     return False
@@ -107,7 +112,6 @@ def chech_hit(obj,enemy):
         projs.pop(
             projs.index([obj.left, obj.top])
         )
-        print(pos_enemy)
         return True
     return False
 
