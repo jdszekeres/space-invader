@@ -80,16 +80,16 @@ def game():
         if event.type == pygame.QUIT:
             exit()
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_UP:
                 fire(player_pos[0])
-            if event.key == pygame.K_a:
+            if event.key == pygame.K_LEFT:
                 move_left = True
-            elif event.key == pygame.K_d:
+            elif event.key == pygame.K_RIGHT:
                 move_right = True
         elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_a:
+            if event.key == pygame.K_LEFT:
                 move_left = False
-            elif event.key == pygame.K_d:
+            elif event.key == pygame.K_RIGHT:
                 move_right = False
     for i, v in enumerate(projs):
         if not chech_hit(pygame.Rect(v[0], v[1], 10, 10)):
