@@ -80,7 +80,7 @@ def game():
             elif event.key == pygame.K_d:
                 move_right = False
     for i, v in enumerate(projs):
-        if not chech_hit(pygame.Rect(v[0],v[1],10,10),[pygame.Rect(i[0],i[1],32,32) for i in pos_enemy]):
+        if not chech_hit(pygame.Rect(v[0],v[1],10,10)):
             pygame.draw.rect(screen,(0,255,0),(v[0],v[1],10,10))
             projs[i][1] -= 10
         
@@ -101,18 +101,22 @@ def game():
 
 def fire(x):
     projs.append([x,464])
-def chech_hit(obj,enemy):
-    col = obj.collideobjects(enemy)
-    if col != None:
-        coord = (col.left, col.top)
+def chech_hit(obj):
+    global pos_enemy
+    enemy = []
+    for i in pos_enemy:
+        col = obj.colliderect(pygame.Rect(i[0],i[1],32,32))
+        if col:
+            col = pygame.Rect(i[0],i[1],32,32)
+            coord = (col.left, col.top)
 
-        pos_enemy.pop(
-            pos_enemy.index(coord)
-        )
-        projs.pop(
-            projs.index([obj.left, obj.top])
-        )
-        return True
+            pos_enemy.pop(
+                pos_enemy.index(coord)
+            )
+            projs.pop(
+                projs.index([obj.left, obj.top])
+            )
+            return True
     return False
 
 
