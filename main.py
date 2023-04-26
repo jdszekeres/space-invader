@@ -1,5 +1,5 @@
 import pygame
-
+import random
 pygame.init()
 
 screen = pygame.display.set_mode([500, 500])
@@ -19,7 +19,9 @@ load_width = 0
 move_left = False
 move_right = False
 projs = []
+enemy_proj = []
 
+ticks= 0 
 
 def start():
     space = pressstart.render("PRESS SPACE", True, (255, 255, 255))
@@ -105,6 +107,15 @@ def game():
     screen.blit(player_img, player_pos)
     for x, y in pos_enemy:
         screen.blit(enemy_img, (x, y))
+    if len(pos_enemy) != 0:
+        firing = random.choices(pos_enemy,k=level)
+        for firing in firing:
+            enemyfire(firing[0],firing[1])
+    for  index, i in enumerate(enemy_proj):
+        if not is_lost(pygame.Rect(i[0], i[1], 10, 10)):
+            pygame.draw.rect(screen, (255, 0, 0), (i[0], i[1], 10, 10))
+            enemy_proj[index][1] += 3 * level
+
 
     if len(pos_enemy) == 0:
         level += 1
@@ -114,7 +125,9 @@ def game():
 
 def fire(x):
     projs.append([x + 16, 464])
-
+def enemyfire(x,y):
+    if ticks % 120 == 0:
+        enemy_proj.append([x + 16,y])
 
 def chech_hit(obj):
     global pos_enemy
@@ -129,7 +142,12 @@ def chech_hit(obj):
             projs.pop(projs.index([obj.left, obj.top]))
             return True
     return False
-
+def is_lost(proj):
+    global player_pos, stage
+    if proj.colliderect(pygame.Rect(player_pos[0], player_pos[1], 32, 32)):
+        stage = "lose"
+        return True
+    return False
 
 while True:
     screen.fill((0, 0, 0))
@@ -141,6 +159,10 @@ while True:
             stage = "game"
     elif stage == "game":
         game()
+    elif stage == "lose":
+        end = pressstart.render("YOU LOSE", True, (255, 255, 255))
+        screen.blit(end, (125, 250))
     pygame.display.update()
     pygame.display.flip()
     clock.tick(120)
+    ticks += 1
